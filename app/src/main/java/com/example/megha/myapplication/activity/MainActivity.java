@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                         } else {
                             noResult.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
+                            Toast.makeText(MainActivity.this, "Check Internet Connectivity", Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (InterruptedException e) {
@@ -192,11 +193,10 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                                 if (list.size() == 0) {
                                     insertDataAsync = new InsertDataAsync().execute();
                                 }
-
-
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            } catch (ExecutionException e) {
+                            } catch (
+                                    ExecutionException e) {
                                 e.printStackTrace();
                             }
                             searchAdapter.notifyDataSetChanged();
@@ -221,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
         noResult.setVisibility(View.VISIBLE);
         noResult.setText(getResources().getString(R.string.no_results_found));
         recyclerView.setVisibility(View.GONE);
-        Toast.makeText(this, "Check Internet Connectivity", Toast.LENGTH_SHORT).show();
     }
 
     @Override

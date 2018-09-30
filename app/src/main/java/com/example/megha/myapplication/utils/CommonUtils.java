@@ -1,5 +1,6 @@
-package com.example.megha.myapplication.Utils;
+package com.example.megha.myapplication.utils;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,5 +25,22 @@ public class CommonUtils {
             return !sLastConnectionHealthy;
         }
         return false;
+    }
+
+    public static void showProgress(ProgressDialog progressDialog, String msg) {
+        if (progressDialog != null) {
+            progressDialog.setMessage(msg);
+            progressDialog.show();
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+    }
+
+    public static void hideProgress(ProgressDialog progressDialog) {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
     }
 }

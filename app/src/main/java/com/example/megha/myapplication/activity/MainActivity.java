@@ -1,5 +1,6 @@
 package com.example.megha.myapplication.activity;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,13 +13,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.megha.myapplication.Pojo.SearchPojo;
 import com.example.megha.myapplication.R;
-import com.example.megha.myapplication.Utils.CommonUtils;
+import com.example.megha.myapplication.utils.CommonUtils;
 import com.example.megha.myapplication.adapter.SearchAdapter;
 import com.example.megha.myapplication.database.SampleDatabase;
 import com.example.megha.myapplication.database.SearchResultEntity;
@@ -51,14 +54,21 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
     private SampleDatabase sampleDatabase;
     private AsyncTask insertDataAsync;
     private fetchDtaAsyncTask fetchDataAsync;
+    private TextView noResult;
+    private ImageView clear;
+    public final static String Empty = "";
+    List<SearchResultEntity> list;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         apiService = ApiClient.getClient().create(ApiInterface.class);
-        editText = (EditText) findViewById(R.id.search);
-        recyclerView = (RecyclerView) findViewById(R.id.resultcontainer);
+        editText = findViewById(R.id.search);
+        recyclerView = findViewById(R.id.resultcontainer);
+        noResult = findViewById(R.id.no_results);
+        clear = findViewById(R.id.btn_clear);
         //database instance
         sampleDatabase = Room.databaseBuilder(getApplicationContext(),
                 SampleDatabase.class, "sample-db").build();
@@ -90,10 +100,21 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                 } else {
                     searchlist.clear();
                     searchAdapter.notifyDataSetChanged();
+                    noResult.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
         });
 
+
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editText.setText(Empty);
+                searchlist.clear();
+                searchAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -111,8 +132,10 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                     serchAPi();
                 } else {
                     try {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        noResult.setVisibility(View.GONE);
                         fetchDataAsync = new fetchDtaAsyncTask();
-                        List<SearchResultEntity> list = fetchDataAsync.execute().get();
+                        list = fetchDataAsync.execute().get();
                         if (list.size() > 0) {
                             searchlist.clear();
                             for (SearchResultEntity entity : list) {
@@ -121,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                             }
                             searchAdapter.notifyDataSetChanged();
                         } else {
-                            // data not found
+                            noResult.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
 
                     } catch (InterruptedException e) {
@@ -162,12 +186,14 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                                 SearchPojo itempojo = new SearchPojo(imageUrl, title, description);
                                 searchlist.add(itempojo);
                             }
-
                             try {
+                                fetchDataAsync = new fetchDtaAsyncTask();
                                 List<SearchResultEntity> list = fetchDataAsync.execute().get();
                                 if (list.size() == 0) {
                                     insertDataAsync = new InsertDataAsync().execute();
                                 }
+
+
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             } catch (ExecutionException e) {
@@ -176,7 +202,11 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                             searchAdapter.notifyDataSetChanged();
 
                         }
+                    } else {
+                        noresultView();
                     }
+                } else {
+                    noresultView();
                 }
             }
 
@@ -185,6 +215,12 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
                 Toast.makeText(MainActivity.this, t.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void noresultView() {
+        noResult.setVisibility(View.VISIBLE);
+        noResult.setText(getResources().getString(R.string.no_results_found));
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override
@@ -212,7 +248,9 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Toast.makeText(MainActivity.this, "Inserted successfuly", Toast.LENGTH_SHORT).show();
+            if (insertDataAsync != null)//cancel asynctask
+                insertDataAsync.cancel(true);
+            Toast.makeText(MainActivity.this, " Results Inserted successfuly", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -229,6 +267,9 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
         @Override
         protected void onPostExecute(List<SearchResultEntity> searchResultEntities) {
             super.onPostExecute(searchResultEntities);
+            if (fetchDataAsync != null) {
+                fetchDataAsync.cancel(true);
+            }
         }
     }
 

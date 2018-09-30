@@ -18,5 +18,4 @@ public interface ApiInterface {
                                              @Query("pilimit") String pilimit, @Query("wbptterms") String wbptterms, @Query("gpssearch") String gpssearch);
 
 
-    //https://en.wikipedia.org/wiki/send Title ---- to open web View
 }

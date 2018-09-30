@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.megha.myapplication.Pojo.SearchPojo;
+import com.example.megha.myapplication.pojo.SearchPojo;
 import com.example.megha.myapplication.R;
 import com.example.megha.myapplication.utils.CommonUtils;
 import com.example.megha.myapplication.adapter.SearchAdapter;
@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements SearchAdapter.ite
         noResult.setVisibility(View.VISIBLE);
         noResult.setText(getResources().getString(R.string.no_results_found));
         recyclerView.setVisibility(View.GONE);
+        Toast.makeText(this, "Check Internet Connectivity", Toast.LENGTH_SHORT).show();
     }
 
     @Override

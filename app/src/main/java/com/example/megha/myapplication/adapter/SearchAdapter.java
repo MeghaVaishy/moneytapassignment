@@ -1,7 +1,6 @@
 package com.example.megha.myapplication.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.megha.myapplication.Pojo.SearchPojo;
+import com.example.megha.myapplication.pojo.SearchPojo;
 import com.example.megha.myapplication.R;
 
 import java.util.List;

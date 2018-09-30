@@ -1,4 +1,4 @@
-package com.example.megha.myapplication.Pojo;
+package com.example.megha.myapplication.pojo;
 
 public class SearchPojo {
     String imageURL;

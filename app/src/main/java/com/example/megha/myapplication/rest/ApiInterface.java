@@ -18,6 +18,5 @@ public interface ApiInterface {
                                              @Query("pilimit") String pilimit, @Query("wbptterms") String wbptterms, @Query("gpssearch") String gpssearch);
 
 
-
-//    https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages|pageterms&generator=prefixsearch&redirects=1&formatversion=2&piprop=thumbnail&pithumbsize=50&pilimit=10&wbptterms=description&gpssearch=megha&gpslimit=30
+    //https://en.wikipedia.org/wiki/send Title ---- to open web View
 }

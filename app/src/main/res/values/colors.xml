@@ -7,4 +7,5 @@
     <color name="line_color">#cccccc</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGrey">#999999</color>
+    <color name="description">#666666</color>
 </resources>
